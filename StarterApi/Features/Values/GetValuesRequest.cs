@@ -1,4 +1,5 @@
-﻿using MediatR;
+﻿using FluentValidation;
+using MediatR;
 using StarterApi.Dtos.Values;
 using System;
 using System.Collections.Generic;
@@ -25,6 +26,13 @@ namespace StarterApi.Features.Values
         public async Task<GetValuesDto> Handle(GetValuesRequest request, CancellationToken cancellationToken)
         {
             return new GetValuesDto { Values = new [] { "Value1", "Dog", "Cat", "Value4" } };
+        }
+    }
+
+    public class GetValuesRequestValidator : AbstractValidator<GetValuesRequest>
+    {
+        public GetValuesRequestValidator()
+        {
         }
     }
 }

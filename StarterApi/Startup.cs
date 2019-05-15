@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
+using FluentValidation;
 using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -31,8 +33,15 @@ namespace StarterApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // Validation
+            AssemblyScanner.FindValidatorsInAssemblyContaining<Startup>().ForEach(pair => {
+                services.Add(ServiceDescriptor.Scoped(pair.InterfaceType, pair.ValidatorType));
+                services.Add(ServiceDescriptor.Scoped(pair.ValidatorType, pair.ValidatorType));
+            });
+
             // Mediatr
             services.AddScoped(typeof(IPipelineBehavior<,>), typeof(LoggingBehavior<,>));
+            services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ValidatingBehavior<,>));
             services.AddMediatR(typeof(Startup));
                        
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
