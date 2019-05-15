@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using StarterApi.Common.Responses;
 using StarterApi.Dtos.Values;
 using System;
 using System.Collections.Generic;
@@ -25,7 +26,8 @@ namespace StarterApi.Features.Values
 
         public async Task<GetValuesDto> Handle(GetValuesRequest request, CancellationToken cancellationToken)
         {
-            return new GetValuesDto { Values = new [] { "Value1", "Dog", "Cat", "Value4" } };
+            var response = new Response<GetValuesDto>();
+            return new GetValuesDto { Values = new[] { "Value1", "Dog", "Cat", "Value4" } };
         }
     }
 
@@ -33,6 +35,10 @@ namespace StarterApi.Features.Values
     {
         public GetValuesRequestValidator()
         {
+            RuleFor(x => x)
+                .Must(x => false)
+                .WithMessage("WithMessageFoo")
+                .OverridePropertyName("OverridePropertyNameBar");
         }
     }
 }

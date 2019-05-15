@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using StarterApi.Common.Responses;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -7,16 +8,13 @@ namespace StarterApi.Infrastructure.Mediatr
 {
     public class LoggingBehavior<TRequest, TResponse>
           : IPipelineBehavior<TRequest, TResponse>
-          where TRequest : IRequest<TResponse>
+              where TRequest : IRequest<TResponse>
     {
-        private readonly IRequestHandler<TRequest, TResponse> _inner;
         private readonly ILogger _logger;
 
         public LoggingBehavior(
-            IRequestHandler<TRequest, TResponse> inner,
             ILogger<LoggingBehavior<TRequest, TResponse>> logger)
         {
-            _inner = inner;
             _logger = logger;
         }
 

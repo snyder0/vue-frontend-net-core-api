@@ -4,27 +4,27 @@ using System.Linq;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using StarterApi.Common.Responses;
+using StarterApi.Dtos.Values;
 using StarterApi.Features.Values;
 
 namespace StarterApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ControllerBase
+    public class ValuesController : ApiControllerBase
     {
-        private readonly IMediator _mediator;
-
-        public ValuesController(IMediator mediator)
+        public ValuesController(IMediator mediator) : base(mediator)
         {
-            _mediator = mediator;
         }
-        
+
         // GET api/values
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<string>>> Get()
+        public async Task<ActionResult<Response<IEnumerable<string>>>> Get()
         {
             var request = new GetValuesRequest();
-            return Ok(await _mediator.Send(request));
+            var result = await Send(request);
+            return Ok(result);
         }
 
         // GET api/values/5
