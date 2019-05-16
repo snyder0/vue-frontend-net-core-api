@@ -14,13 +14,6 @@ namespace StarterApi.Features.Values
 
     public class GetValuesRequestHandler : IRequestHandler<GetValuesRequest, GetValuesDto>
     {
-        private readonly IMediator _mediator;
-
-        public GetValuesRequestHandler(IMediator mediator)
-        {
-            _mediator = mediator;
-        }
-
         public async Task<GetValuesDto> Handle(GetValuesRequest request, CancellationToken cancellationToken)
         {
             var response = new Response<GetValuesDto>();
