@@ -11,4 +11,11 @@ namespace StarterApi.Common.Responses
         public bool IsValid { get; set; } = true;
         public List<ErrorMessage> ErrorMessages { get; set; } = new List<ErrorMessage>();
     }
+
+    public class Response
+    {
+        public object Data { get; set; }
+        public bool IsValid { get; set; } = true;
+        public List<ErrorMessage> ErrorMessages { get; set; } = new List<ErrorMessage>();
+    }
 }

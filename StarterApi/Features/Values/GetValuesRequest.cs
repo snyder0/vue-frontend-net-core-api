@@ -2,9 +2,6 @@
 using MediatR;
 using StarterApi.Common.Responses;
 using StarterApi.Dtos.Values;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 

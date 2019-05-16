@@ -1,26 +1,26 @@
-﻿using MediatR;
-using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using MediatR;
 using StarterApi.Common.Responses;
-using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using FluentValidation;
-using FluentValidation.Results;
 
-namespace StarterApi.Controllers
+namespace StarterApi.Services
 {
-    public abstract class ApiControllerBase : ControllerBase
+    public interface IMediatorService
+    {
+        Task<Response<TResponse>> Send<TResponse>(IRequest<TResponse> request);
+    }
+
+    public class MediatorService : IMediatorService
     {
         private readonly IMediator _mediator;
 
-        public ApiControllerBase(IMediator mediator)
+        public MediatorService(IMediator mediator)
         {
             _mediator = mediator;
         }
 
-        protected async Task<Response<TResponse>> Send<TRequest, TResponse>(TRequest request)
-            where TRequest : IRequest<TResponse>
+        public async Task<Response<TResponse>> Send<TResponse>(IRequest<TResponse> request)
         {
             var response = new Response<TResponse>();
 
@@ -29,16 +29,15 @@ namespace StarterApi.Controllers
                 var result = await _mediator.Send(request);
                 response.Data = result;
             }
-            catch(ValidationException validationException)
+            catch (ValidationException validationException)
             {
-                response = ConvertValidationErrorsToErrorMessages<TRequest, TResponse>(validationException);
+                response = ConvertValidationErrorsToErrorMessages<TResponse>(validationException);
             }
 
             return response;
         }
 
-        private Response<TResponse> ConvertValidationErrorsToErrorMessages<TRequest, TResponse>(ValidationException result)
-            where TRequest : IRequest<TResponse>
+        private Response<TResponse> ConvertValidationErrorsToErrorMessages<TResponse>(ValidationException result)
         {
             var response = new Response<TResponse>();
 

@@ -1,29 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using StarterApi.Common.Responses;
 using StarterApi.Dtos.Values;
 using StarterApi.Features.Values;
+using StarterApi.Services;
 
 namespace StarterApi.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ValuesController : ApiControllerBase
+    public class ValuesController : ControllerBase
     {
-        public ValuesController(IMediator mediator) : base(mediator)
+        private readonly IMediatorService _mediatorService;
+
+        public ValuesController(IMediatorService mediatorService)
         {
+            _mediatorService = mediatorService;
         }
 
         // GET api/values
         [HttpGet]
-        public async Task<ActionResult<Response<IEnumerable<string>>>> Get()
+        [ProducesResponseType(typeof(Response<GetValuesDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Response), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Get()
         {
             var request = new GetValuesRequest();
-            var result = await Send(request);
+            var result = await _mediatorService.Send(request);
             return Ok(result);
         }
 
