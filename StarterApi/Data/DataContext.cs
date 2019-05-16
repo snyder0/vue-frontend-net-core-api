@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StarterApi.Dtos.Values
+namespace StarterApi.Data
 {
-    public class GetValuesDto
+    public class DataContext
     {
-        public string[] Values { get; set; }
     }
 }

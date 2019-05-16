@@ -10,6 +10,7 @@ using Serilog;
 using StarterApi.Services;
 using StarterApi.Infrastructure.Mediatr;
 using Swashbuckle.AspNetCore.Swagger;
+using AutoMapper;
 
 namespace StarterApi
 {
@@ -28,6 +29,9 @@ namespace StarterApi
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // AutoMapper
+            services.AddAutoMapper(typeof(Startup));
+
             // Validation
             AssemblyScanner.FindValidatorsInAssemblyContaining<Startup>().ForEach(pair => {
                 services.Add(ServiceDescriptor.Scoped(pair.InterfaceType, pair.ValidatorType));

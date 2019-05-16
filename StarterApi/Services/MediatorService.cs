@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using MediatR;
+using Microsoft.AspNetCore.Mvc;
 using StarterApi.Common.Responses;
 using System.Linq;
 using System.Threading.Tasks;
