@@ -1,17 +1,17 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using StarterApi.Common.Responses;
 using StarterApi.Dtos;
 using StarterApi.Features.Users;
 using StarterApi.Services;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 
 namespace StarterApi.Controllers
 {
-    [Route("api/[controller]")]
+    [Authorize]
+    [Route("api")]
     [ApiController]
     public class UsersController : MediatorControllerBase
     {
@@ -22,7 +22,17 @@ namespace StarterApi.Controllers
             _mediatorService = mediatorService;
         }
 
-        [HttpGet]
+        [AllowAnonymous]
+        [HttpPost("[controller]/authenticate")]
+        [ProducesResponseType(typeof(Response<GetUserAuthenticationDto>), (int)HttpStatusCode.OK)]
+        [ProducesResponseType(typeof(Response), (int)HttpStatusCode.BadRequest)]
+        public async Task<IActionResult> Authenticate(AuthenticateUserRequest request)
+        {
+            var result = await _mediatorService.Send(request);
+            return Ok(result);
+        }
+
+        [HttpGet("[controller]")]
         [ProducesResponseType(typeof(Response<List<GetUserDto>>), (int)HttpStatusCode.OK)]
         [ProducesResponseType(typeof(Response), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> GetAll()
@@ -32,7 +42,8 @@ namespace StarterApi.Controllers
             return Ok(result);
         }
 
-        [HttpPost]
+        [AllowAnonymous]
+        [HttpPost("[controller]")]
         [ProducesResponseType(typeof(Response<GetUserDto>), (int)HttpStatusCode.Created)]
         [ProducesResponseType(typeof(Response), (int)HttpStatusCode.BadRequest)]
         public async Task<IActionResult> Post(CreateUserRequest request)

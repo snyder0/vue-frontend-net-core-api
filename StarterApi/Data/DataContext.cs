@@ -1,12 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using StarterApi.Common.Constants;
 using StarterApi.Data.Entities;
-using StarterApi.Data.Map;
-using StarterApi.Data.Seed;
+using StarterApi.Security;
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace StarterApi.Data
 {
@@ -19,12 +17,34 @@ namespace StarterApi.Data
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            ApplyConfigurations(builder);
+            SeedData(builder);
+        }
+
+        private static void SeedData(ModelBuilder builder)
+        {
+            var passwordHasher = new PasswordHash("admin");
+            builder.Entity<User>().HasData(
+                new User
+                {
+                    Id = 1,
+                    Role = RoleConstants.Admin,
+                    Email = "admin@admin.com",
+                    FirstName = "Seeded-Admin-FirstName",
+                    LastName = "Seeded-Admin-LastName",
+                    PasswordHash = passwordHasher.Hash,
+                    PasswordSalt = passwordHasher.Salt
+                });
+        }
+
+        private void ApplyConfigurations(ModelBuilder builder)
+        {
             base.OnModelCreating(builder);
 
             var applyGenericMethod = typeof(ModelBuilder)
                 .GetMethods()
-                .Where(m => 
-                    m.Name == "ApplyConfiguration" 
+                .Where(m =>
+                    m.Name == "ApplyConfiguration"
                     && m.GetParameters()
                         .First()
                         .ParameterType.GetGenericTypeDefinition() == typeof(IEntityTypeConfiguration<>)

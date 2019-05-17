@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using StarterApi.Data.Map;
 
 namespace StarterApi.Data.Entities
 {
@@ -9,6 +8,10 @@ namespace StarterApi.Data.Entities
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Email { get; set; }
+        public string Role { get; set; }
+        public byte[] PasswordHash { get; set; }
+        public byte[] PasswordSalt { get; set; }
     }
 
     public class UserConfiguration : IEntityTypeConfiguration<User>
