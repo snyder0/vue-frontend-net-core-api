@@ -1,21 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace StarterApi.Common.Responses
 {
-    public class Response<T>
-    {
-        public T Data { get; set; }
-        public bool IsValid { get; set; } = true;
-        public List<ErrorMessage> ErrorMessages { get; set; } = new List<ErrorMessage>();
-    }
-
     public class Response
     {
         public object Data { get; set; }
-        public bool IsValid { get; set; } = true;
+        public bool IsValid => !ErrorMessages.Any();
         public List<ErrorMessage> ErrorMessages { get; set; } = new List<ErrorMessage>();
+    }
+
+    public class Response<T> : Response
+    {
+        public new T Data { get; set; }
     }
 }

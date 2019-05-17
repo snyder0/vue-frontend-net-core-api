@@ -9,7 +9,7 @@ namespace StarterApi.Services
 {
     public interface IMediatorService
     {
-        Task<Response<TResponse>> Send<TResponse>(IRequest<TResponse> request);
+        Task<Response<object>> Send<TResponse>(IRequest<TResponse> request);
     }
 
     public class MediatorService : IMediatorService
@@ -21,9 +21,9 @@ namespace StarterApi.Services
             _mediator = mediator;
         }
 
-        public async Task<Response<TResponse>> Send<TResponse>(IRequest<TResponse> request)
+        public async Task<Response<object>> Send<TResponse>(IRequest<TResponse> request)
         {
-            var response = new Response<TResponse>();
+            var response = new Response<object>();
 
             try
             {
@@ -38,9 +38,9 @@ namespace StarterApi.Services
             return response;
         }
 
-        private Response<TResponse> ConvertValidationErrorsToErrorMessages<TResponse>(ValidationException result)
+        private Response<object> ConvertValidationErrorsToErrorMessages<TResponse>(ValidationException result)
         {
-            var response = new Response<TResponse>();
+            var response = new Response<object> { Data = new object() };
 
             foreach (var error in result.Errors)
             {
@@ -51,8 +51,6 @@ namespace StarterApi.Services
                 };
                 response.ErrorMessages.Add(errorMessage);
             }
-
-            response.IsValid = !response.ErrorMessages.Any();
 
             return response;
         }
