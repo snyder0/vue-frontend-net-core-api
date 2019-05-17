@@ -4,8 +4,7 @@ module.exports = {
     node: true,
   },
   extends: [
-    'plugin:vue/essential',
-    '@vue/airbnb',
+    'plugin:vue/recommended',
     '@vue/typescript',
   ],
   rules: {
@@ -15,4 +14,6 @@ module.exports = {
   parserOptions: {
     parser: '@typescript-eslint/parser',
   },
+  parser: 'vue-eslint-parser',
+  plugins: ['@typescript-eslint'],
 };
