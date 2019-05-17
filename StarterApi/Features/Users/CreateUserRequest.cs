@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using FluentValidation;
 using MediatR;
+using StarterApi.Data;
 using StarterApi.Data.Entities;
 using StarterApi.Dtos;
 using System.Threading;
@@ -10,7 +11,7 @@ namespace StarterApi.Features.Users
 {
     public class CreateUserRequest : 
         IRequest<GetUserDto>
-    {
+    {   
         public string FirstName { get; set; }
         public string LastName { get; set; }
     }
@@ -18,11 +19,14 @@ namespace StarterApi.Features.Users
     public class CreateUserRequestHandler :
         IRequestHandler<CreateUserRequest, GetUserDto>
     {
+        private readonly DataContext _context;
         private readonly IMapper _mapper;
 
         public CreateUserRequestHandler(
+            DataContext context,
             IMapper mapper)
         {
+            _context = context;
             _mapper = mapper;
         }
 
@@ -31,8 +35,11 @@ namespace StarterApi.Features.Users
             CancellationToken cancellationToken)
         {
             var entity = _mapper.Map<User>(request);
-            var getDto = _mapper.Map<GetUserDto>(entity);
-            return getDto;
+            
+            _context.Set<User>().Add(entity);
+            _context.SaveChanges();
+
+            return _mapper.Map<GetUserDto>(entity);
         }
     }
 

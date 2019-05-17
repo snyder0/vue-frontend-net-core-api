@@ -1,9 +1,12 @@
-﻿using FluentValidation;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
+using StarterApi.Data;
+using StarterApi.Data.Entities;
 using StarterApi.Dtos;
-using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -15,13 +18,23 @@ namespace StarterApi.Features.Users
 
     public class GetAllUsersRequestHandler : IRequestHandler<GetAllUsersRequest, List<GetUserDto>>
     {
+        private readonly DataContext _context;
+        private readonly IMapper _mapper;
+
+        public GetAllUsersRequestHandler(
+            DataContext context,
+            IMapper mapper)
+        {
+            _context = context;
+            _mapper = mapper;
+        }
+
         public async Task<List<GetUserDto>> Handle(GetAllUsersRequest request, CancellationToken cancellationToken)
         {
-            return new List<GetUserDto>
-            {
-                new GetUserDto { FirstName = "Jim", LastName = "Smith" },
-                new GetUserDto { FirstName = "Jane", LastName = "Doe" }
-            };
+            return await _context
+                .Set<User>()
+                .ProjectTo<GetUserDto>(_mapper.ConfigurationProvider)
+                .ToListAsync();
         }
     }
 

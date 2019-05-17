@@ -11,6 +11,8 @@ using StarterApi.Services;
 using StarterApi.Infrastructure.Mediatr;
 using Swashbuckle.AspNetCore.Swagger;
 using AutoMapper;
+using StarterApi.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace StarterApi
 {
@@ -52,6 +54,10 @@ namespace StarterApi
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
+
+            // Database
+            services.AddDbContext<DataContext>(opts => 
+                opts.UseSqlServer(Configuration["ConnectionString:DefaultConnection"]));
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
