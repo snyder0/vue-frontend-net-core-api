@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace StarterApi.Controllers
 {
-    [Authorize]
+    //[Authorize]
     [Route("api")]
     [ApiController]
     public class UsersController : MediatorControllerBase
